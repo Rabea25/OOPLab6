@@ -68,7 +68,7 @@
         <mxCell id="Qpvld4McqwNK_sNApmEk-28" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;labelBackgroundColor=none;strokeColor=#0B4D6A;fontColor=default;" edge="1" parent="1" source="Qpvld4McqwNK_sNApmEk-3" target="Qpvld4McqwNK_sNApmEk-19">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Qpvld4McqwNK_sNApmEk-3" value="Answers submitted to QuizService" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#09555B;strokeColor=#BAC8D3;fontColor=#EEEEEE;" vertex="1" parent="1">
+        <mxCell id="Qpvld4McqwNK_sNApmEk-3" value="Answers submitted to Quizzes" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#09555B;strokeColor=#BAC8D3;fontColor=#EEEEEE;" vertex="1" parent="1">
           <mxGeometry x="-1230" y="-530" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="Qpvld4McqwNK_sNApmEk-24" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;labelBackgroundColor=none;strokeColor=#0B4D6A;fontColor=default;" edge="1" parent="1" source="Qpvld4McqwNK_sNApmEk-4" target="Qpvld4McqwNK_sNApmEk-6">
