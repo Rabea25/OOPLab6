@@ -1,0 +1,201 @@
+@startuml
+
+class User{
+- userId : String
+- username: String
+- email: String
+- password: String
+
++ login(user: String, password: String): boolean
++ changePassword(old: String, new: String)
++ logout(): boolean
+}
+
+class Analytics{
+    - analyticsId: String
+    - studentId: String
+    - timeSpent: int
+    - completedCourses: List<String>
+    - quizGrades: Map<String, List<int>>
+
+    + getQuizGrade(quizId: String) : float
+
+
+}
+
+class Student extends User{
+    - enrollments: List<Enrollment>
+    - earnedCertificates: List<Certificate>
+    - analytics: Analytics
+
+    + getAvailableCourses(): List<Course>
+    + enrollCourse(courseId: String): boolean
+    + getPendingLessons(courseId: String): List<lesson>
+    + getPendingQuizzes(courseId: String): List<Quiz>
+    + completeLesson(courseId: String, LessonId: String): boolean
+    + takeQuiz(courseId: String, quizId: String): boolean
+    + getAnalytics(): Analytics
+    + updateEnrolled() : void
+    ' update will loop on enrollments, check completions, move to analytics and generate certificates
+}
+
+class Enrollment{
+    - studentId: String
+    - courseId: String
+    - pendingLessons: List<String>
+    - completeLessons: List<String>
+    - pendingQuizzes: List<String>
+    - passedQuizzes: List<String>
+
+    + isComplete(): boolean
+    + AttemptQuiz(quizId: String, studentAnswers: List<String>): boolean
+    + completeLesson(lessonId: String): boolean
+    + getProgress(): double
+}
+
+class Admin extends User{
+
+    + approveCourse(courseId: String): boolean
+    + removeCourse(courseId: String): boolean
+    + getAnalytics(): String
+    + manageUser(userId: String, actionType: String) : boolean
+    + addUser(username: String, email: String, type: String) : boolean
+}
+
+class Instructor extends User{
+    - courses: List<Course>
+
+    + createCourse(courseName: String) : boolean
+    + deleteCourse(courseId: String) : boolean
+    + getCourseDetails(courseId: String) : List<String>
+    + createQuiz(courseID: String, questions: List<String>, answers: List<String>, passingScore: int)
+    + uploadLesson(courseID: String, title: String, content: List<String>, resources: List<String>)
+}
+
+class Course{
+    - courseId: String
+    - courseName: String
+    - instructorId: String
+    - lessons: List<Lesson>
+    - quizzes: List<Quiz>
+    - students List<Student>
+
+    + getPendingLessons(): List<Lesson>
+    + getPendingQuizzes(): List<Quiz>
+
+}
+class Lesson{
+    - lessonID: String
+    - title: String
+    - content: List<String>
+    - extraResources: List<String>
+}
+class Quiz{
+    - quizId: String
+    - CourseId: String
+    - questions: List<Question>
+    - passingScore: int
+
+    + evaluateQuiz(studentAnswers: List<String>): int
+    + isPassed(studentScore: int): boolean
+}
+class Question{
+    - questionId: String
+    - questionText: String
+    - answer: String
+    - type: String
+    - options: List<String>
+    - timelimit: int
+    - marks: int
+
+    + getMark(studentAnswer: String) : int
+}
+
+class Certificate{
+    - certId: String
+    - studentId: String
+    - CourseId: String
+    - EnrollmentId: String
+    - issueDate: LocalDateTime
+    - grade: String
+    - maxGrade: String
+
+    + generateCertificate(): void
+    + downloadCertificate() : File
+}
+
+class UserService{
+    - db: JsonDatabaseManager
+
+    + createUser(username: String, email: String, pass: String) : User
+    + authUser(email: String, pass: String) : User
+    + searchUser(id: String) : User
+    + updateUser(id: String, username: string) : boolean
+    + deleteUser(id: String) : boolean
+    + getAllUsers() : List<User>
+}
+
+class CourseService{
+    - db: JsonDatabaseManager
+
+    + createCourse(id: String, name: String, instructorId: String) : Course
+    + editCourse(id: String) : boolean
+    + deleteCourse(id: String) : boolean
+    + enrollStudent(courseId: String, studentId: String) : Enrollment
+    + approveCourse(id: String, approve: boolean) : boolean
+    + searchCourse(id: String) : Course
+    + searchCourseInstructor(id: String) : List<Course>
+    + getAllCourses(): List<Course>
+}
+
+class QuizService{
+    - db: JsonDatabaseManager
+
+    + createQuiz(id: String, questions: List<Question>, passScore: int) : Quiz
+    + getQuiz(id: String) : Quiz
+    + getQuizCourse(CourseId: String) : List<Quiz>
+    + deleteQuiz(id: String) : boolean
+    + getAllQuizzes() : List<Quiz>
+
+
+}
+
+class JsonDatabaseManager{
+    - fileName: String
+    - filePath: String
+    - userRecords : List<User>
+    - courseRecords : List<Course>
+    - certificateRecords : List<Certificate>
+    - analyticsRecords : List<Analytics>
+    - enrollmentRecords : List<Enrollment>
+
+    + loadData() : void
+    + saveData() : void
+
+}
+
+Course "1" *-- "0..*" Lesson
+Course "1" *-- "0..*" Quiz
+Quiz "1" *-- "1..*" Question
+
+Instructor "1" o-- "0..*" Course
+
+Student "1" -- "1" Analytics
+Student "1" -- "0..*" Certificate
+Student "1" -- "0..*" Enrollment
+Course "1" -- "0..*" Enrollment
+
+
+UserService ..> JsonDatabaseManager
+CourseService ..> JsonDatabaseManager
+QuizService ..> JsonDatabaseManager
+Admin ..> UserService
+Admin ..> CourseService
+Admin ..> QuizService
+Admin ..> Analytics
+Student ..> CourseService
+Student ..> QuizService
+Instructor ..> CourseService
+Instructor ..> QuizService
+
+@enduml
